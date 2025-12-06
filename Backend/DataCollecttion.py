@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 # REPLACE THIS with your actual API key from Materials Project
-MAPI_KEY = os.getenv("KEY-1")
+MAPI_KEY = os.getenv("KEY_1")
 
 print("Connecting to Materials Project...")
 
