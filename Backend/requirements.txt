@@ -6,6 +6,7 @@ scikit-learn
 xgboost
 matminer
 pymatgen
+emmet-core
 joblib
 python-dotenv
 pydantic

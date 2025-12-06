@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './Dataset.css'
 
-const API_BASE = 'http://localhost:8000'
+// Use environment variable or default to relative path for production
+const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:8000')
 
 function Dataset() {
   const [dataset, setDataset] = useState(null)

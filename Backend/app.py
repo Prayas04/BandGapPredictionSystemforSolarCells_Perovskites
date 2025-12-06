@@ -15,9 +15,12 @@ app = FastAPI(
 )
 
 # CORS middleware to allow React frontend
+# In production, allow all origins since frontend is served from same domain
+# In development, allow specific localhost origins
+cors_origins = os.getenv("CORS_ORIGINS", "*").split(",") if os.getenv("CORS_ORIGINS") else ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # React dev servers
+    allow_origins=cors_origins if cors_origins != ["*"] else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,21 +53,32 @@ async def load_model():
         else:
             raise FileNotFoundError(f"Featurizer file not found: {featurizer_path}")
         
-        # Load dataset
-        if os.path.exists(dataset_path):
-            dataset = pd.read_pickle(dataset_path)
-        else:
-            csv_path = os.path.join(os.path.dirname(__file__), "..", "materials_info.csv")
-            if os.path.exists(csv_path):
-                dataset = pd.read_csv(csv_path)
+        # Load dataset (optional - app can work without it)
+        try:
+            if os.path.exists(dataset_path):
+                dataset = pd.read_pickle(dataset_path)
+                print(f"Dataset loaded from {dataset_path}")
             else:
-                dataset = None
+                csv_path = os.path.join(os.path.dirname(__file__), "..", "materials_info.csv")
+                if os.path.exists(csv_path):
+                    dataset = pd.read_csv(csv_path)
+                    print(f"Dataset loaded from {csv_path}")
+                else:
+                    dataset = None
+                    print("Warning: Dataset file not found. Dataset endpoints will not work.")
+        except Exception as dataset_error:
+            print(f"Warning: Could not load dataset: {str(dataset_error)}")
+            print("Dataset endpoints will not be available, but predictions will still work.")
+            dataset = None
         
         print("All components loaded successfully!")
         
     except Exception as e:
         print(f"Error loading model: {str(e)}")
-        raise
+        # Don't raise - allow app to start even if dataset fails
+        # Only raise if model or featurizer fail
+        if model is None or featurizer is None:
+            raise
 
 # Request/Response models
 class PredictionRequest(BaseModel):
@@ -88,9 +102,10 @@ class ModelInfoResponse(BaseModel):
     features_used: int
     training_info: dict
 
-# Root endpoint
-@app.get("/")
-async def root():
+# Root endpoint - only if frontend is not available
+# This will be overridden by main.py if static files exist
+@app.get("/api")
+async def api_info():
     return {
         "message": "Solar Band Gap Prediction API",
         "version": "1.0.0",

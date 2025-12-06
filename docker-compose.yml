@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  solar-bandgap-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: solar-bandgap-prediction
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Mount model files if you want to update them without rebuilding
+      - ./Backend/SolarB_Gap_Pred.pkl:/app/Backend/SolarB_Gap_Pred.pkl:ro
+      - ./Backend/Features.pkl:/app/Backend/Features.pkl:ro
+      - ./Backend/materials_info.pkl:/app/Backend/materials_info.pkl:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
