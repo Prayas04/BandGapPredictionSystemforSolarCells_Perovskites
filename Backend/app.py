@@ -117,7 +117,7 @@ async def api_info():
         }
     }
 
-# Health check
+# Health check - responds immediately, even before models load
 @app.get("/health")
 async def health():
     return {
@@ -126,6 +126,13 @@ async def health():
         "featurizer_loaded": featurizer is not None,
         "dataset_loaded": dataset is not None
     }
+
+# Simple root health check for Render port detection
+@app.get("/")
+async def root_health():
+    # This endpoint responds immediately to help Render detect the port
+    # The actual frontend serving is handled in main.py
+    return {"status": "ok", "message": "Server is running"}
 
 # Prediction endpoint
 @app.post("/predict", response_model=PredictionResponse)

@@ -78,7 +78,31 @@ else:
 
 if __name__ == "__main__":
     import uvicorn
-    # Use PORT environment variable (Render provides this), default to 8000 for local
+    import sys
+    
+    # Use PORT environment variable if set, otherwise default to 8000
     port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    
+    # Print startup info for debugging
+    print("=" * 50)
+    print("Starting Solar Band Gap Prediction Server")
+    print("=" * 50)
+    print(f"PORT environment variable: {os.getenv('PORT', 'Not set (using default 8000)')}")
+    print(f"Binding to: 0.0.0.0:{port}")
+    print(f"Python version: {sys.version}")
+    print("=" * 50)
+    
+    # Start server - this will bind to port immediately
+    # Models load in background via startup event
+    try:
+        uvicorn.run(
+            app, 
+            host="0.0.0.0", 
+            port=port, 
+            log_level="info",
+            access_log=True
+        )
+    except Exception as e:
+        print(f"❌ Failed to start server: {e}")
+        raise
 

@@ -49,5 +49,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD python -c "import os, urllib.request; port = os.getenv('PORT', '8000'); urllib.request.urlopen(f'http://localhost:{port}/health')" || exit 1
 
 # Run the application
-CMD ["python", "main.py"]
+# Use exec form to ensure proper signal handling
+CMD ["python", "-u", "main.py"]
 
