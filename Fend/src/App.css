@@ -36,6 +36,11 @@
   font-size: 2rem;
 }
 
+.brand-text img {
+  height: 3.2rem;
+  display: inline-block;
+}
+
 .nav-links {
   display: flex;
   gap: 0.5rem;

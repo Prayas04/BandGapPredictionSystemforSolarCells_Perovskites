@@ -5,6 +5,7 @@ import Dataset from './pages/Dataset'
 import About from './pages/About'
 import Predictions from './pages/Predictions'
 import './App.css'
+import MPerosyz_1 from './assets/MPerosyz_1.png'
 
 function Navigation() {
   const location = useLocation()
@@ -18,7 +19,7 @@ function Navigation() {
       <div className="nav-container">
         <div className="nav-brand">
           <span className="brand-icon">⚡</span>
-          <span className="brand-text">Solar Band Gap Predictor</span>
+          <span className="brand-text"><img src={MPerosyz_1} alt="M-Perosyz"/></span>
         </div>
         <div className="nav-links">
           <Link 
