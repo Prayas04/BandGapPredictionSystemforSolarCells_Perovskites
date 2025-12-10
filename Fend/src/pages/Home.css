@@ -161,6 +161,17 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+  /* Mobile slider defaults */
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 0.75rem; /* room for touch */
+  /* optional visual smoothing */
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: thin;     /* Firefox */
 }
 
 .feature-card {
@@ -169,6 +180,19 @@
   border-radius: 1rem;
   box-shadow: var(--shadow-md);
   transition: all 0.3s;
+  flex: 0 0 86%;
+  min-width: 220px;
+  scroll-snap-align: center;
+  box-sizing: border-box;
+  margin-right: 1rem;
+  background: var(--card-bg, #071028);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 1rem;
+  /* keep consistent height if desired */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .feature-card:hover {
@@ -280,6 +304,71 @@
 
   .cta-content h2 {
     font-size: 2rem;
+  }
+}
+
+/* Responsive slider behavior for .features-grid (mobile: horizontal snap carousel; desktop: regular grid) */
+.features-grid {
+  gap: 1rem;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 0.75rem;
+  -ms-overflow-style: none;
+  scrollbar-width: thin;
+}
+
+/* Each card becomes a snap-slide on small screens - KEEP ORIGINAL CARD COLOR */
+.features-grid .feature-card {
+  background: var(--bg-primary); /* keep previous color */
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s;
+  flex: 0 0 86%;
+  min-width: 220px;
+  scroll-snap-align: center;
+  box-sizing: border-box;
+  margin-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* make horizontal scrollbar less obtrusive but still usable */
+.features-grid::-webkit-scrollbar {
+  height: 8px;
+}
+.features-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+.features-grid::-webkit-scrollbar-thumb {
+  background: rgba(148,163,184,0.28);
+  border-radius: 999px;
+}
+.features-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(148,163,184,0.38);
+}
+
+/* Desktop / larger screens: regular grid, disable slider behavior */
+@media (min-width: 768px) {
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    overflow: visible;
+    scroll-snap-type: none;
+    padding-bottom: 0;
+  }
+  .features-grid .feature-card {
+    flex: none;
+    min-width: auto;
+    margin-right: 0;
+    background: var(--bg-primary); /* ensure same color on desktop */
   }
 }
 
