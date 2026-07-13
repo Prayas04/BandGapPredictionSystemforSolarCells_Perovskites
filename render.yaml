@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: solar-bandgap-api
+    env: python
+    rootDir: Backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13
+      - key: CORS_ORIGINS
+        value: "*" # Change this to your Vercel URL later in the Render Dashboard for better security
