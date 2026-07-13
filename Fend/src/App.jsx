@@ -6,6 +6,7 @@ import About from './pages/About'
 import Predictions from './pages/Predictions'
 import './App.css'
 import MPerosyz_1 from './assets/MPerosyz_1.png'
+import Logo from './assets/Logo.png'
 
 function Navigation() {
   const location = useLocation()
@@ -18,7 +19,7 @@ function Navigation() {
     <nav className="navbar">
       <div className="nav-container">
         <div className="nav-brand">
-          <span className="brand-icon">⚡</span>
+          <span className="brand-icon"><img src={Logo} alt="Logo"/></span>
           <span className="brand-text"><img src={MPerosyz_1} alt="M-Perosyz"/></span>
         </div>
         <div className="nav-links">

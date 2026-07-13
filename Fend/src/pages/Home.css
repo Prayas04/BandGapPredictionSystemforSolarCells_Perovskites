@@ -157,42 +157,24 @@
   color: var(--text-primary);
 }
 
+/* Default: grid layout for desktop and wide screens */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  /* Mobile slider defaults */
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding-bottom: 0.75rem; /* room for touch */
-  /* optional visual smoothing */
-  -ms-overflow-style: none;  /* IE/Edge */
-  scrollbar-width: thin;     /* Firefox */
+  gap: 1.5rem;
 }
 
 .feature-card {
   background: var(--bg-primary);
-  padding: 2rem;
-  border-radius: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
   box-shadow: var(--shadow-md);
   transition: all 0.3s;
-  flex: 0 0 86%;
-  min-width: 220px;
-  scroll-snap-align: center;
   box-sizing: border-box;
-  margin-right: 1rem;
-  background: var(--card-bg, #071028);
-  border: 1px solid rgba(255,255,255,0.04);
-  border-radius: 12px;
-  padding: 1rem;
-  /* keep consistent height if desired */
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  border: 1px solid rgba(255,255,255,0.04);
 }
 
 .feature-card:hover {
@@ -215,6 +197,43 @@
 .feature-card p {
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+/* Mobile: switch to a horizontal snap scroller so cards are individually visible */
+@media (max-width: 767px) {
+  .features-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 0.75rem;
+    -ms-overflow-style: none;
+    scrollbar-width: thin;
+  }
+
+  .features-grid .feature-card {
+    flex: 0 0 86%;
+    min-width: 86%;
+    scroll-snap-align: center;
+    margin-right: 1rem;
+  }
+
+  .features-grid::-webkit-scrollbar {
+    height: 8px;
+  }
+  .features-grid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .features-grid::-webkit-scrollbar-thumb {
+    background: rgba(148,163,184,0.28);
+    border-radius: 999px;
+  }
+  .features-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(148,163,184,0.38);
+  }
 }
 
 /* Quick Stats */

@@ -32,8 +32,8 @@
   color: var(--primary-color);
 }
 
-.brand-icon {
-  font-size: 2rem;
+.brand-icon img {
+  height: 4.7rem;
 }
 
 .brand-text img {
