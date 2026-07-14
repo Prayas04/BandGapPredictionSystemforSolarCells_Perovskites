@@ -1,6 +1,6 @@
 # ☀️ Solar Band Gap Prediction System
 
-[![Python 3.12+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
 [![React 18](https://img.shields.io/badge/React-18-61dafb.svg?logo=react)](https://reactjs.org/)
 [![XGBoost](https://img.shields.io/badge/XGBoost-3.3+-orange.svg)](https://xgboost.readthedocs.io/)
