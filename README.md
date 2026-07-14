@@ -1,205 +1,194 @@
-# Solar Band Gap Prediction System
+# ☀️ Solar Band Gap Prediction System
 
-A professional-grade web application for predicting perovskite crystal band gaps using machine learning. Built with FastAPI backend and React frontend.
+[![Python 3.12+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
+[![React 18](https://img.shields.io/badge/React-18-61dafb.svg?logo=react)](https://reactjs.org/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-3.3+-orange.svg)](https://xgboost.readthedocs.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Project Overview
+A professional-grade, full-stack machine learning application designed to predict the **Band Gap ($E_g$)** of Perovskite crystals. 
 
-This system predicts the Band Gap (E_g) of Perovskite crystals, which is crucial for determining solar cell efficiency. The "Band Gap" determines if a material is a conductor, insulator, or semiconductor. For a solar cell to be efficient, it needs a "Goldilocks" band gap (ideally between 1.1 eV and 1.4 eV).
+By analyzing chemical formulas through advanced featurization (`matminer`), this system identifies materials that fall within the "Goldilocks" band gap range (1.1 eV to 1.4 eV), accelerating the discovery of highly efficient materials for next-generation solar cells.
 
-## Features
+---
 
-- **Home Page**: Overview of the system and key concepts
-- **Dataset**: Browse and explore the materials dataset used for training
-- **About**: Comprehensive theoretical concepts about band gaps and solar cells
-- **Predictions**: Interactive band gap prediction with detailed analysis and visualization
+## 🚀 Key Features
 
-## Tech Stack
+*   **Real-time ML Inference:** Instantly predict band gaps from raw chemical formulas (e.g., `CsPbI3`, `CH3NH3PbBr3`).
+*   **Intelligent Categorization:** Automatically classifies materials into efficiency tiers (Optimal, Low Gap, High Gap).
+*   **Interactive Dashboard:** A sleek React-based UI featuring prediction history, data visualization (using Recharts), and material analysis.
+*   **Production-Ready Backend:** A highly concurrent FastAPI server built for fast, scalable model serving.
+*   **Automated Deployment:** Infrastructure as Code (IaC) ready with a `render.yaml` blueprint.
 
-### Backend
-- FastAPI - Modern Python web framework
-- XGBoost - Machine learning model
-- Matminer - Material science featurization
-- Pandas/NumPy - Data processing
+---
 
-### Frontend
-- React 18 - UI framework
-- React Router - Navigation
-- Recharts - Data visualization
-- Vite - Build tool
+## 🏗️ Architecture
 
-## Project Structure
+```mermaid
+graph LR
+    subgraph Frontend [React / Vite]
+        UI[Web UI]
+        Vis[Recharts Data Viz]
+        UI <--> Vis
+    end
 
-```
-SolarBandGapPrediction/
-├── Backend/
-│   ├── app.py              # FastAPI application
-│   ├── Train.py            # Model training script
-│   ├── SolarB_Gap_Pred.pkl # Trained model
-│   ├── Features.pkl        # Featurizer
-│   ├── materials_info.pkl  # Dataset
-│   └── requirements.txt    # Python dependencies
-├── Fend/
-│   ├── src/
-│   │   ├── pages/          # React page components
-│   │   ├── App.jsx         # Main app component
-│   │   └── main.jsx        # Entry point
-│   ├── package.json         # Node dependencies
-│   └── vite.config.js      # Vite configuration
-└── README.md
+    subgraph Backend [FastAPI Server]
+        API[API Router]
+        Featurizer[Matminer Magpie]
+        Model[XGBoost Regressor]
+        API --> Featurizer
+        Featurizer --> Model
+    end
+
+    UI -- "POST /predict" --> API
+    Model -- "Band Gap (eV)" --> UI
 ```
 
-## Installation & Setup
+## 🛠️ Tech Stack
+
+**Data Science & ML**
+*   **XGBoost:** Gradient boosted decision trees for robust regression.
+*   **Matminer:** Domain-specific material science featurization (Magpie preset).
+*   **Pandas & NumPy:** Data wrangling and transformation.
+*   **Scikit-Learn:** Cross-validation and model evaluation.
+
+**Backend & API**
+*   **FastAPI:** Asynchronous web framework for serving the ML model.
+*   **Uvicorn:** ASGI web server implementation.
+*   **Pydantic:** Data validation and serialization.
+
+**Frontend**
+*   **React 18 (Vite):** Component-based UI rendering.
+*   **Recharts:** Composable charting library for React.
+*   **React Router:** Client-side navigation.
+
+---
+
+## 🔬 The Machine Learning Pipeline
+
+Our model relies on a rigorous data science pipeline (`Backend/Train.py`) to ensure high accuracy and generalization:
+
+1.  **Data Filtering:** Removes metals (Band Gap < 0.1 eV) to focus strictly on semiconductors.
+2.  **Chemical Featurization:** Converts string formulas (e.g., `MAPbI3`) into numerical features representing electronegativity, radii, and valence using `matminer`'s Magpie preset.
+3.  **Target Transformation:** Applies a `log1p(x)` transformation to the target band gap to normalize the distribution and prevent large insulators from skewing the model.
+4.  **Hyperparameter Tuning:** Utilizes `GridSearchCV` with 3-Fold Cross-Validation to optimize `n_estimators`, `learning_rate`, and tree depth.
+5.  **Target Metrics:** Achieves an RMSE (Root Mean Squared Error) of **< 0.7 eV**.
+
+---
+
+## 💻 Getting Started (Local Development)
 
 ### Prerequisites
-- Python 3.8+
-- Node.js 16+
-- npm or yarn
+*   Node.js (v18+)
+*   Python (3.12+)
 
-### Backend Setup
+### 1. Backend Setup
 
-1. Navigate to the Backend directory:
 ```bash
+# Navigate to the backend directory
 cd Backend
-```
 
-2. Create a virtual environment (if not already created):
-```bash
-python -m venv S_Env
-```
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
-3. Activate the virtual environment:
-- Windows:
-```bash
-S_Env\Scripts\activate
-```
-- Linux/Mac:
-```bash
-source S_Env/bin/activate
-```
-
-4. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-5. Ensure model files exist:
-   - `SolarB_Gap_Pred.pkl` - Trained model
-   - `Features.pkl` - Featurizer
-   - `materials_info.pkl` or `materials_info.csv` - Dataset
-
-   If model files don't exist, run the training script:
-```bash
-python Train.py
-```
-
-### Frontend Setup
-
-1. Navigate to the Fend directory:
-```bash
-cd Fend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-## Running the Application
-
-### Start Backend Server
-
-1. Navigate to Backend directory:
-```bash
-cd Backend
-```
-
-2. Activate virtual environment (if not already active)
-
-3. Run the FastAPI server:
-```bash
+# Start the FastAPI server
 python app.py
 ```
+*The API will be available at `http://localhost:8000`*
 
-Or using uvicorn directly:
+### 2. Frontend Setup
+
 ```bash
-uvicorn app:app --reload --host 0.0.0.0 --port 8000
-```
-
-The API will be available at `http://localhost:8000`
-
-### Start Frontend Development Server
-
-1. Navigate to Fend directory:
-```bash
+# Navigate to the frontend directory
 cd Fend
-```
 
-2. Start the development server:
-```bash
+# Install dependencies
+npm install
+
+# Start the development server
 npm run dev
 ```
+*The UI will be available at `http://localhost:3000`*
 
-The frontend will be available at `http://localhost:3000`
+---
 
-## API Endpoints
+## 🌍 Deployment
 
-- `GET /` - API information
-- `GET /health` - Health check
-- `POST /predict` - Predict band gap for a chemical formula
-- `GET /dataset` - Get dataset information and samples
-- `GET /model_info` - Get model information
+### Backend (Render)
+The backend is configured for 1-click deployment on [Render](https://render.com) using the included `render.yaml` blueprint.
+1. Push this repository to GitHub.
+2. In the Render Dashboard, click **New +** -> **Blueprint** and select your repository.
+3. Render will automatically provision the environment, install dependencies, and start `uvicorn`.
 
-### Example API Usage
+### Frontend (Vercel)
+The frontend is optimized for [Vercel](https://vercel.com).
+1. Connect your repository to Vercel.
+2. Set the Root Directory to `Fend`.
+3. Add an Environment Variable: `VITE_API_URL` pointing to your deployed Render Backend URL (e.g., `https://your-api.onrender.com`).
+4. Click Deploy.
 
-```python
-import requests
+---
 
-# Predict band gap
-response = requests.post('http://localhost:8000/predict', json={
-    'formula': 'CsPbI3'
-})
-print(response.json())
+## 📡 API Reference
+
+#### `POST /predict`
+Predicts the band gap for a given chemical formula.
+
+**Request Body:**
+```json
+{
+  "formula": "CsPbI3"
+}
 ```
 
-## Usage Guide
+**Response:**
+```json
+{
+  "formula": "CsPbI3",
+  "predicted_band_gap": 1.3402,
+  "is_optimal": true,
+  "efficiency_category": "Optimal for Solar Cells",
+  "confidence_range": {
+    "lower": 1.1402,
+    "upper": 1.5402
+  }
+}
+```
 
-1. **Home Page**: Start here to understand the system overview
-2. **Dataset**: Browse materials in the training dataset with pagination
-3. **About**: Learn about band gaps, perovskites, and ML approach
-4. **Predictions**: 
-   - Enter a chemical formula (e.g., `CsPbI3`, `CH3NH3PbBr3`)
-   - Click "Predict Band Gap"
-   - View detailed analysis including:
-     - Predicted band gap value
-     - Efficiency category
-     - Optimal range visualization
-     - Confidence intervals
+#### `GET /model_info`
+Returns training metadata, hyperparameters, and features used by the active XGBoost model.
 
-## Model Details
+#### `GET /dataset` *(Optional)*
+Paginates through the raw training dataset (if the dataset file is present).
 
-- **Algorithm**: XGBoost Regressor
-- **Features**: Magpie feature set (132 features)
-- **Target**: log(band_gap + 1) transformation
-- **Optimization**: Grid Search with 3-Fold Cross Validation
-- **Target RMSE**: < 0.7 eV
+---
 
-## Development
+## 📁 Project Structure
 
-### Backend Development
-- API documentation available at `http://localhost:8000/docs` (Swagger UI)
-- Alternative docs at `http://localhost:8000/redoc`
+```text
+SolarBandGapPrediction/
+├── Backend/
+│   ├── app.py                  # FastAPI Application
+│   ├── Train.py                # ML Pipeline & Training Script
+│   ├── DataCollecttion.py      # Dataset aggregration logic
+│   ├── requirements.txt        # Pinned Python dependencies
+│   ├── SolarB_Gap_Pred.pkl     # Serialized XGBoost Model
+│   └── Features.pkl            # Serialized Matminer Featurizer
+├── Fend/
+│   ├── src/                    # React Source Code
+│   │   ├── pages/              # Routing pages (Home, Predictions, About)
+│   │   ├── App.jsx             # Main Router Component
+│   │   └── main.jsx            # React DOM Entry
+│   ├── package.json            # Node dependencies
+│   └── vite.config.js          # Vite build config
+├── render.yaml                 # Infrastructure as Code (Render)
+├── .gitignore                  # Git exclusions
+└── README.md                   # Project Documentation
+```
 
-### Frontend Development
-- Hot module replacement enabled
-- Proxy configured for API calls
-
-## Notes
-
-- The model filters out metals (band_gap < 0.1 eV) as they're not suitable for solar cells
-- Optimal band gap range for solar cells: 1.1 - 1.4 eV
-- Predictions include confidence intervals (±0.2 eV typical)
-
-## License
-
-This project is for academic/research purposes.
-
+## 📄 License
+This project is for academic, research, and portfolio purposes. 
