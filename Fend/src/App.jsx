@@ -67,7 +67,7 @@ function App() {
           </Routes>
         </main>
         <footer className="footer">
-          <p>&copy; 2024 Solar Band Gap Prediction System. Built with FastAPI & React.</p>
+          <p>&copy; 2024 Solar Band Gap Prediction System.</p>
         </footer>
       </div>
     </Router>
